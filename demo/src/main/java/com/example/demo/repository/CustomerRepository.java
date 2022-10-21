@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.entity.Customer;
 
 @Repository
-public interface CustomerRepository extends JpaRepository<Customer, UUID>{
-	Optional<Customer> findByFirstName(String firstName);
+public interface CustomerRepository extends JpaRepository<Customer, UUID> {
+	Optional<Customer> findByEmail(String email);
+	
 }

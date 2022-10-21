@@ -11,14 +11,16 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table
+@Table(name="Customer")
 public class Customer {
 	@Id
 	@GeneratedValue(generator = "UUID")
@@ -28,4 +30,6 @@ public class Customer {
 
 	private String firstName;
 	private String lastName;
+	private String email;
+	
 }
