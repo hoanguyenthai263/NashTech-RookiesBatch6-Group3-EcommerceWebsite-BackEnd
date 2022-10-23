@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.request.RoleRequestDto;
 import com.example.demo.dto.response.RoleResponseDto;
-import com.example.demo.dto.response.UserResponseDto;
 import com.example.demo.entity.Role;
 import com.example.demo.exception.ResourceFoundException;
 import com.example.demo.mapper.RoleMapper;
@@ -32,7 +31,7 @@ public class UserController {
 	}
 
 	@GetMapping
-	public Map<String, UserResponseDto> findUserByRoleId(@Valid @RequestBody RoleRequestDto roleRequestDto)
+	public Map<String, Object> findUserByRoleId(@Valid @RequestBody RoleRequestDto roleRequestDto)
 			throws ResourceFoundException {
 		Map<String, RoleResponseDto> roleResponseDto = roleService.findRoleById(roleRequestDto);
 		Role role = RoleMapper.responseToRole(roleResponseDto.get("data"));;
