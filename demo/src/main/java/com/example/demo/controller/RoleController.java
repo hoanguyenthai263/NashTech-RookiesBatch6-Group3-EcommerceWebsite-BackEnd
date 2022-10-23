@@ -12,30 +12,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.request.RoleRequestDto;
 import com.example.demo.dto.response.RoleResponseDto;
-import com.example.demo.dto.response.UserResponseDto;
-import com.example.demo.entity.Role;
 import com.example.demo.exception.ResourceFoundException;
-import com.example.demo.mapper.RoleMapper;
 import com.example.demo.service.RoleService;
-import com.example.demo.service.UserService;
 
 @RestController
-@RequestMapping("/api/v1/user")
-public class UserController {
-	private UserService userService;
+@RequestMapping("/api/v1/role")
+public class RoleController {
 	private RoleService roleService;
 
 	@Autowired
-	public UserController(UserService userService, RoleService roleService) {
-		this.userService = userService;
+	public RoleController(RoleService roleService) {
 		this.roleService = roleService;
 	}
 
 	@GetMapping
-	public Map<String, UserResponseDto> findUserByRoleId(@Valid @RequestBody RoleRequestDto roleRequestDto)
+	public Map<String, RoleResponseDto> findRoleById(@Valid @RequestBody RoleRequestDto roleRequestDto)
 			throws ResourceFoundException {
-		Map<String, RoleResponseDto> roleResponseDto = roleService.findRoleById(roleRequestDto);
-		Role role = RoleMapper.responseToRole(roleResponseDto.get("data"));;
-		return userService.findUserByRole(role);
+		return roleService.findRoleById(roleRequestDto);
 	}
 }

@@ -1,4 +1,4 @@
-package com.example.demo.dto.request;
+package com.example.demo.dto.response;
 
 import java.util.UUID;
 
@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRequestDtoLoadAll {
+public class RoleResponseDto {
 	private UUID id;
+	private String role;
 }

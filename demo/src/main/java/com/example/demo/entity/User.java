@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "user_tbl")
 public class User {
 	@Id
-	@Type(type="org.hibernate.type.UUIDCharType")//JSON compare in Postman
+	@Type(type = "org.hibernate.type.UUIDCharType") // JSON compare in Postman
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
 	@Column(name = "id", columnDefinition = "VARCHAR(255)", insertable = false, updatable = false, unique = true, nullable = false)
@@ -46,7 +46,7 @@ public class User {
 	private Integer status;
 
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "roleid", referencedColumnName = "id", insertable = false, updatable = true, unique = false, nullable = false)
-	private Role role;
+	@JoinColumn(name = "role_id", referencedColumnName = "id", insertable = false, updatable = true, unique = false, nullable = false)
+	private Role roleId;
 
 }

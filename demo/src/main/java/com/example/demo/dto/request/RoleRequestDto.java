@@ -1,6 +1,8 @@
-package com.example.demo.dto;
+package com.example.demo.dto.request;
 
-import com.example.demo.entity.Role;
+import java.util.UUID;
+
+import javax.validation.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +13,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoleDto {
-	private Role role;
+public class RoleRequestDto {
+	private UUID id;
 }

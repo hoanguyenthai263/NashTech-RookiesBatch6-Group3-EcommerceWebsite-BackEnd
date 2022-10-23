@@ -7,11 +7,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dto.RoleDto;
 import com.example.demo.dto.response.UserResponseDto;
+import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.exception.ResourceFoundException;
-import com.example.demo.mapper.customer.UserMapper;
+import com.example.demo.mapper.UserMapper;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 
@@ -34,14 +34,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Map<String, UserResponseDto> findUserByRole(RoleDto roleDto)
-			throws ResourceFoundException {
-		List<User> userOptional = userRepository.findByRole(roleDto.getRole());
-		if (!userOptional.isEmpty()) {
-			User user = userOptional.get(0);
-			//DO NOT PRINT SYSTEM LOG OR IT FAIL
-			return initUserResponseDto(user);
-		} else
-			throw new ResourceFoundException("No user in database");
+	public Map<String, UserResponseDto> findUserByRole(Role role) throws ResourceFoundException {
+		List<User> userList = userRepository.findByRoleId(role);
+		if (userList.isEmpty()) {
+			throw new ResourceFoundException("User not found");
+		}
+		User user = userList.get(0);
+		return initUserResponseDto(user);
 	}
+
 }

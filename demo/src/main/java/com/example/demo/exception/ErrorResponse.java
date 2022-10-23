@@ -1,4 +1,4 @@
-package com.example.demo.dto.response;
+package com.example.demo.exception;
 
 import java.util.Map;
 
@@ -16,12 +16,12 @@ public class ErrorResponse {
 		this.code = code;
 		this.message = message;
 	}
-	
+
 	public ErrorResponse(String code, String message, Map<String, String> validationErrors) {
 		super();
 		this.code = code;
 		this.message = message;
-		this.validationErrors = validationErrors; 
+		this.validationErrors = validationErrors;
 	}
 
 	public String getCode() {
@@ -47,5 +47,4 @@ public class ErrorResponse {
 	public void setValidationErrors(Map<String, String> validationErrors) {
 		this.validationErrors = validationErrors;
 	}
-	
 }
