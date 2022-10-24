@@ -46,7 +46,7 @@ public class User {
 	private Integer status;
 
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "role_id", referencedColumnName = "id", insertable = false, updatable = true, unique = false, nullable = false)
+	@JoinColumn(name = "role_id", referencedColumnName = "id", insertable = true, updatable = true, unique = false, nullable = false)
 	private Role roleId;
 
 }

@@ -26,7 +26,7 @@ public class RoleServiceImpl implements RoleService {
 		this.roleMapper = roleMapper;
 	}
 
-	private Map<String, RoleResponseDto> initRoleResponseDto(Role role) {
+	private Map<String, RoleResponseDto> createSearchRoleWithId(Role role) {
 		Map<String, RoleResponseDto> wrapper = new HashMap<>();
 		RoleResponseDto roleResponseDto = roleMapper.roleToResponse(role);
 		wrapper.put("data", roleResponseDto);
@@ -34,12 +34,12 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	public Map<String, RoleResponseDto> findRoleById(RoleRequestDto roleRequestDto) throws ResourceFoundException {
+	public Map<String, RoleResponseDto> roleWithId(RoleRequestDto roleRequestDto) throws ResourceFoundException {
 		Optional<Role> roleOptional = roleRepository.findById(roleRequestDto.getId());
 		if (roleOptional.isEmpty()) {
 			throw new ResourceFoundException("Role not found");
 		}
 		Role role = roleOptional.get();
-		return initRoleResponseDto(role);
+		return createSearchRoleWithId(role);
 	}
 }

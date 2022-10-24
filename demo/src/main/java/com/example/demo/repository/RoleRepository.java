@@ -11,4 +11,6 @@ import com.example.demo.entity.Role;
 @Repository
 public interface RoleRepository extends JpaRepository<Role, UUID> {
 	Optional<Role> findById(UUID id);
+
+	Optional<Role> findByRole(String role);
 }

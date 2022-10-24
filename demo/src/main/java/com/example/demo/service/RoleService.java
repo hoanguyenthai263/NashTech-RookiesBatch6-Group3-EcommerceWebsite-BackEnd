@@ -7,5 +7,5 @@ import com.example.demo.dto.response.RoleResponseDto;
 import com.example.demo.exception.ResourceFoundException;
 
 public interface RoleService {
-	public Map<String, RoleResponseDto> findRoleById(RoleRequestDto roleRequestDto) throws ResourceFoundException;
+	public Map<String, RoleResponseDto> roleWithId(RoleRequestDto roleRequestDto) throws ResourceFoundException;
 }

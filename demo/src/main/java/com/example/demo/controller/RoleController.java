@@ -26,8 +26,9 @@ public class RoleController {
 	}
 
 	@GetMapping
-	public Map<String, RoleResponseDto> findRoleById(@Valid @RequestBody RoleRequestDto roleRequestDto)
+	public Map<String, RoleResponseDto> searchWithId(@Valid @RequestBody RoleRequestDto roleRequestDto)
 			throws ResourceFoundException {
-		return roleService.findRoleById(roleRequestDto);
+		return roleService.roleWithId(roleRequestDto);
 	}
+	
 }

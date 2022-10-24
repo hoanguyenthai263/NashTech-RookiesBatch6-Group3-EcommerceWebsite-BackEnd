@@ -6,11 +6,13 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.request.RoleRequestDto;
+import com.example.demo.dto.request.UserRequestDto;
 import com.example.demo.dto.response.RoleResponseDto;
 import com.example.demo.entity.Role;
 import com.example.demo.exception.ResourceFoundException;
@@ -31,10 +33,17 @@ public class UserController {
 	}
 
 	@GetMapping
-	public Map<String, Object> findUserByRoleId(@Valid @RequestBody RoleRequestDto roleRequestDto)
+	public Map<String, Object> searchWithRole(@Valid @RequestBody RoleRequestDto roleRequestDto)
 			throws ResourceFoundException {
-		Map<String, RoleResponseDto> roleResponseDto = roleService.findRoleById(roleRequestDto);
-		Role role = RoleMapper.responseToRole(roleResponseDto.get("data"));;
-		return userService.findUserByRole(role);
+		Map<String, RoleResponseDto> roleResponseDto = roleService.roleWithId(roleRequestDto);
+		Role role = RoleMapper.responseToRole(roleResponseDto.get("data"));
+		;
+		return userService.usersListWithRole(role);
+	}
+
+	@PostMapping("/create")
+	public Map<String, Object> createUser(@Valid @RequestBody UserRequestDto userRequestDto)
+			throws ResourceFoundException {
+		return userService.userRegister(userRequestDto);
 	}
 }
