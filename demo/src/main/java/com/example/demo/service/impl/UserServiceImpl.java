@@ -22,25 +22,27 @@ import com.example.demo.service.UserService;
 @Service
 public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
-	private final UserMapper userMapper;
 	private final RoleRepository roleRepository;
+	private final UserMapper userMapper;
 
 	@Autowired
-	public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository) {
+	public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper) {
 		this.userRepository = userRepository;
-		this.userMapper = userMapper;
 		this.roleRepository = roleRepository;
+		this.userMapper = userMapper;
 	}
 
-	private Map<String, Object> createSearchUserWithRole(List<User> list) {
+	private Map<String, Object> createUsersListWithRole(List<User> list) {
 		Map<String, Object> wrapper = new HashMap<>();
 		Map<String, Object> dataWrapper = new HashMap<>();
 		wrapper.put("data", dataWrapper);
 		List<UserResponseDto> userWarrper = new ArrayList<>();
 		dataWrapper.put("users", userWarrper);
 		for (User user : list) {
-			UserResponseDto userResponseDto = userMapper.userToResponse(user);
-			userWarrper.add(userResponseDto);
+			if (user.getStatus().equals(1)) {
+				UserResponseDto userResponseDto = userMapper.userToResponse(user);
+				userWarrper.add(userResponseDto);
+			}
 		}
 		return wrapper;
 	}
@@ -51,13 +53,11 @@ public class UserServiceImpl implements UserService {
 		if (userList.isEmpty()) {
 			throw new ResourceFoundException("User not found");
 		}
-		return createSearchUserWithRole(userList);
+		return createUsersListWithRole(userList);
 	}
 
-	private Map<String, Object> createAddUser(User user) {
+	private Map<String, Object> createUserRegister(User user) {
 		Map<String, Object> wrapper = new HashMap<>();
-		Map<String, Object> dataWrapper = new HashMap<>();
-		wrapper.put("data", dataWrapper);
 		UserResponseDto userDTOResponse = userMapper.userToResponse(user);
 		wrapper.put("data", userDTOResponse);
 		return wrapper;
@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
 		}
 		userOptional = userRepository.findByPhone(userRequestDto.getPhone());
 		if (userOptional.isPresent()) {
-			throw new ResourceFoundException("Phong already in use");
+			throw new ResourceFoundException("Phone already in use");
 		}
 		User user = userMapper.requestToUser(userRequestDto);
 		Optional<Role> roleOptional = roleRepository.findByRole("User");
@@ -80,6 +80,70 @@ public class UserServiceImpl implements UserService {
 		}
 		user.setRoleId(roleOptional.get());
 		userRepository.save(user);
-		return createAddUser(user);
+		return createUserRegister(user);
+	}
+
+	private Map<String, Object> createUserUpdate(User user) {
+		Map<String, Object> wrapper = new HashMap<>();
+		UserResponseDto userDTOResponse = userMapper.userToResponse(user);
+		wrapper.put("data", userDTOResponse);
+		return wrapper;
+	}
+
+	@Override
+	public Map<String, Object> userUpdate(UserRequestDto userRequestDto) throws ResourceFoundException {
+		Optional<User> userOptional = userRepository.findById(userRequestDto.getId());
+		if (userOptional.isEmpty()) {
+			throw new ResourceFoundException("User not found");
+		}
+		Integer statusOptional = userOptional.get().getStatus();
+		if (statusOptional.equals(0)) {
+			throw new ResourceFoundException("User not found");
+		}
+		User user = userMapper.requestToUser(userRequestDto);
+		user.setStatus(statusOptional);
+		user.setRoleId(userOptional.get().getRoleId());
+		userRepository.save(user);
+		return createUserUpdate(user);
+	}
+
+	private Map<String, Object> createDeleteUser(User user) {
+		Map<String, Object> wrapper = new HashMap<>();
+		UserResponseDto userDTOResponse = userMapper.userToResponse(user);
+		wrapper.put("data", userDTOResponse);
+		return wrapper;
+	}
+
+	@Override
+	public Map<String, Object> userDelete(UserRequestDto userRequestDto) throws ResourceFoundException {
+		Optional<User> userOptional = userRepository.findById(userRequestDto.getId());
+		if (userOptional.isEmpty()) {
+			throw new ResourceFoundException("User not found");
+		}
+		Integer statusOptional = userOptional.get().getStatus();
+		if (statusOptional.equals(0)) {
+			throw new ResourceFoundException("User not found");
+		}
+		User user = userOptional.get();
+		user.setStatus(0);
+		userRepository.save(user);
+		return createDeleteUser(user);
+	}
+
+	private Map<String, UserResponseDto> createUserWithId(User user) {
+		Map<String, UserResponseDto> wrapper = new HashMap<>();
+		UserResponseDto userResponseDto = userMapper.userToResponse(user);
+		wrapper.put("data", userResponseDto);
+		return wrapper;
+	}
+
+	@Override
+	public Map<String, UserResponseDto> userWithId(UserRequestDto userRequestDto) throws ResourceFoundException {
+		Optional<User> userOptional = userRepository.findById(userRequestDto.getId());
+		if (userOptional.isEmpty()) {
+			throw new ResourceFoundException("User not found");
+		}
+		User user = userOptional.get();
+		return createUserWithId(user);
 	}
 }

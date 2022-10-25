@@ -23,8 +23,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "user_tbl")
-public class User {
+@Table(name = "address_tbl")
+public class Address {
 	@Id
 	@Type(type = "org.hibernate.type.UUIDCharType")
 	@GeneratedValue(generator = "UUID")
@@ -32,21 +32,21 @@ public class User {
 	@Column(name = "id", columnDefinition = "VARCHAR(255)", insertable = false, updatable = false, unique = true, nullable = false)
 	private UUID id;
 
-	@Column(name = "email", columnDefinition = "VARCHAR(255)", insertable = true, updatable = true, unique = true, nullable = false)
-	private String email;
-	@Column(name = "phone", columnDefinition = "VARCHAR(255)", insertable = true, updatable = true, unique = true, nullable = false)
-	private String phone;
-	@Column(name = "first_name", columnDefinition = "VARCHAR(255)", insertable = true, updatable = true, unique = false, nullable = false)
-	private String firstName;
-	@Column(name = "last_name", columnDefinition = "VARCHAR(255)", insertable = true, updatable = true, unique = false, nullable = false)
-	private String lastName;
-	@Column(name = "password", columnDefinition = "VARCHAR(255)", insertable = true, updatable = true, unique = false, nullable = false)
-	private String passWord;
+	@Column(name = "street_Address", columnDefinition = "VARCHAR(255)", insertable = true, updatable = true, unique = false, nullable = false)
+	private String streetAddress;
+	@Column(name = "apt_Suite_Building", columnDefinition = "VARCHAR(255)", insertable = true, updatable = true, unique = false, nullable = true)
+	private String aptSuiteBuilding;
+	@Column(name = "city", columnDefinition = "VARCHAR(255)", insertable = true, updatable = true, unique = false, nullable = false)
+	private String city;
+	@Column(name = "district", columnDefinition = "VARCHAR(255)", insertable = true, updatable = true, unique = false, nullable = false)
+	private String district;
+	@Column(name = "ward", columnDefinition = "VARCHAR(255)", insertable = true, updatable = true, unique = false, nullable = false)
+	private String ward;
 	@Column(name = "status", columnDefinition = "INTEGER DEFAULT 1", insertable = false, updatable = true, unique = false, nullable = false)
 	private Integer status;
 
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "role_id", referencedColumnName = "id", insertable = true, updatable = true, unique = false, nullable = false)
-	private Role roleId;
+	@JoinColumn(name = "user_id", referencedColumnName = "id", insertable = true, updatable = true, unique = false, nullable = false)
+	private User userId;
 
 }

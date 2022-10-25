@@ -26,7 +26,7 @@ public class RoleServiceImpl implements RoleService {
 		this.roleMapper = roleMapper;
 	}
 
-	private Map<String, RoleResponseDto> createSearchRoleWithId(Role role) {
+	private Map<String, RoleResponseDto> createRoleWithId(Role role) {
 		Map<String, RoleResponseDto> wrapper = new HashMap<>();
 		RoleResponseDto roleResponseDto = roleMapper.roleToResponse(role);
 		wrapper.put("data", roleResponseDto);
@@ -40,6 +40,6 @@ public class RoleServiceImpl implements RoleService {
 			throw new ResourceFoundException("Role not found");
 		}
 		Role role = roleOptional.get();
-		return createSearchRoleWithId(role);
+		return createRoleWithId(role);
 	}
 }
