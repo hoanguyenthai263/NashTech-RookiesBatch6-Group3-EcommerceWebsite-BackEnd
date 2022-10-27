@@ -4,9 +4,11 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -24,6 +26,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "category_tbl")
 public class Category {
+	@Id
 	@Type(type = "org.hibernate.type.UUIDCharType")
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
@@ -32,8 +35,8 @@ public class Category {
 
 	@Column(name = "category", columnDefinition = "VARCHAR(255)", insertable = true, updatable = true, unique = true, nullable = false)
 	private String category;
-
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "category_parent", referencedColumnName = "id", insertable = true, updatable = true, unique = false, nullable = false)
+	
+	@OneToOne(optional = true, fetch = FetchType.EAGER)
+	@JoinColumn(name = "category_Parent", referencedColumnName = "id", insertable = true, updatable = true, unique = false, nullable = true)
 	private Category categoryParent;
 }

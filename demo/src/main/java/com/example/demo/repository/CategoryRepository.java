@@ -11,7 +11,7 @@ import com.example.demo.entity.Category;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, UUID> {
-	Optional<Category> findById(UUID id);
-	
-	List<Category> findByCategoryParent(Category categoryParent);
+	  Optional<Category> findById(UUID id);
+	  
+	  List<Category> findByCategoryParent(Category categoryParent);
 }

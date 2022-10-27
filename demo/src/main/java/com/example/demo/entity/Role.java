@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "role_tbl")
 public class Role {
 	@Id
-	@Type(type = "org.hibernate.type.UUIDCharType") // JSON compare in Postman
+	@Type(type = "org.hibernate.type.UUIDCharType")
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
 	@Column(name = "id", columnDefinition = "VARCHAR(255)", insertable = false, updatable = false, unique = true, nullable = false)
