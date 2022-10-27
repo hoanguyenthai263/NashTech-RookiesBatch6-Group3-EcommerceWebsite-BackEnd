@@ -56,6 +56,23 @@ public class UserServiceImpl implements UserService {
 		return createUsersListWithRole(userList);
 	}
 
+	private Map<String, UserResponseDto> createUserWithId(User user) {
+		Map<String, UserResponseDto> wrapper = new HashMap<>();
+		UserResponseDto userResponseDto = userMapper.userToResponse(user);
+		wrapper.put("data", userResponseDto);
+		return wrapper;
+	}
+
+	@Override
+	public Map<String, UserResponseDto> userWithId(UserRequestDto userRequestDto) throws ResourceFoundException {
+		Optional<User> userOptional = userRepository.findById(userRequestDto.getId());
+		if (userOptional.isEmpty()) {
+			throw new ResourceFoundException("User not found");
+		}
+		User user = userOptional.get();
+		return createUserWithId(user);
+	}
+
 	private Map<String, Object> createUserRegister(User user) {
 		Map<String, Object> wrapper = new HashMap<>();
 		UserResponseDto userDTOResponse = userMapper.userToResponse(user);
@@ -107,7 +124,7 @@ public class UserServiceImpl implements UserService {
 		return createUserUpdate(user);
 	}
 
-	private Map<String, Object> createDeleteUser(User user) {
+	private Map<String, Object> createUserDelete(User user) {
 		Map<String, Object> wrapper = new HashMap<>();
 		UserResponseDto userDTOResponse = userMapper.userToResponse(user);
 		wrapper.put("data", userDTOResponse);
@@ -127,23 +144,6 @@ public class UserServiceImpl implements UserService {
 		User user = userOptional.get();
 		user.setStatus(0);
 		userRepository.save(user);
-		return createDeleteUser(user);
-	}
-
-	private Map<String, UserResponseDto> createUserWithId(User user) {
-		Map<String, UserResponseDto> wrapper = new HashMap<>();
-		UserResponseDto userResponseDto = userMapper.userToResponse(user);
-		wrapper.put("data", userResponseDto);
-		return wrapper;
-	}
-
-	@Override
-	public Map<String, UserResponseDto> userWithId(UserRequestDto userRequestDto) throws ResourceFoundException {
-		Optional<User> userOptional = userRepository.findById(userRequestDto.getId());
-		if (userOptional.isEmpty()) {
-			throw new ResourceFoundException("User not found");
-		}
-		User user = userOptional.get();
-		return createUserWithId(user);
+		return createUserDelete(user);
 	}
 }

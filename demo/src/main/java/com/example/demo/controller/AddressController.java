@@ -6,11 +6,15 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.request.AddressRequestDto;
 import com.example.demo.dto.request.UserRequestDto;
+import com.example.demo.dto.response.AddressResponseDto;
 import com.example.demo.dto.response.UserResponseDto;
 import com.example.demo.entity.User;
 import com.example.demo.exception.ResourceFoundException;
@@ -38,5 +42,27 @@ public class AddressController {
 		Map<String, UserResponseDto> userResponseDto = userService.userWithId(userRequestDto);
 		User user = usermapper.responseToRole(userResponseDto.get("data"));
 		return addressService.addressListWithUser(user);
+	}
+
+	@GetMapping("/id")
+	public Map<String, AddressResponseDto> searchWithId(@Valid @RequestBody AddressRequestDto addressRequestDto)
+			throws ResourceFoundException {
+		return addressService.addressWithId(addressRequestDto);
+	}
+
+	@PostMapping("/create")
+	public Map<String, Object> create(@Valid @RequestBody AddressRequestDto addressRequestDto)
+			throws ResourceFoundException {
+		return addressService.addressCreate(addressRequestDto);
+	}
+
+	@PutMapping("/update")
+	public Map<String, Object> update(@Valid @RequestBody AddressRequestDto addressRequestDto) {
+		return addressService.addressUpdate(addressRequestDto);
+	}
+
+	@PutMapping("/delete")
+	public Map<String, Object> delete(@Valid @RequestBody AddressRequestDto addressRequestDto) {
+		return addressService.addressDelete(addressRequestDto);
 	}
 }

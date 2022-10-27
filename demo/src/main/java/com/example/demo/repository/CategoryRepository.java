@@ -7,13 +7,11 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.entity.Address;
-import com.example.demo.entity.User;
+import com.example.demo.entity.Category;
 
 @Repository
-public interface AddressRepository extends JpaRepository<Address, UUID> {
-	List<Address> findByUserId(User userId);
+public interface CategoryRepository extends JpaRepository<Category, UUID> {
+	Optional<Category> findById(UUID id);
 	
-	Optional<Address> findById(UUID id);
-	
+	List<Category> findByCategoryParent(Category categoryParent);
 }

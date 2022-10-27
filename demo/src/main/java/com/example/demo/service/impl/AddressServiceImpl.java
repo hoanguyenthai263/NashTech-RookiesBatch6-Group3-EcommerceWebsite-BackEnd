@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dto.request.AddressRequestDto;
 import com.example.demo.dto.response.AddressResponseDto;
 import com.example.demo.entity.Address;
 import com.example.demo.entity.User;
@@ -51,4 +53,91 @@ public class AddressServiceImpl implements AddressService {
 		return createAddressListWithUser(addressList);
 	}
 
+	private Map<String, AddressResponseDto> createAddressWithId(Address address) {
+		Map<String, AddressResponseDto> wrapper = new HashMap<>();
+		AddressResponseDto addressResponseDto = addressMapper.addressToResponse(address);
+		wrapper.put("data", addressResponseDto);
+		return wrapper;
+	}
+
+	@Override
+	public Map<String, AddressResponseDto> addressWithId(AddressRequestDto addressRequestDto)
+			throws ResourceFoundException {
+		Optional<Address> addressOptional = addressRepository.findById(addressRequestDto.getId());
+		if (addressOptional.isEmpty()) {
+			throw new ResourceFoundException("Address not found");
+		}
+		Address address = addressOptional.get();
+		return createAddressWithId(address);
+	}
+
+	private Map<String, Object> createAddressCreate(Address address) {
+		Map<String, Object> wrapper = new HashMap<>();
+		AddressResponseDto addressResponseDto = addressMapper.addressToResponse(address);
+		wrapper.put("data", addressResponseDto);
+		return wrapper;
+	}
+
+	@Override
+	public Map<String, Object> addressCreate(AddressRequestDto addressRequestDto) throws ResourceFoundException {
+		List<Address> addressList = addressRepository.findByUserId(addressRequestDto.getUserId());
+		for (Address address : addressList) {
+			if (address.getStreetAddress().equals(addressMapper.requestToAddress(addressRequestDto).getStreetAddress())
+					&& address.getCity().equals(addressMapper.requestToAddress(addressRequestDto).getCity())
+					&& address.getDistrict().equals(addressMapper.requestToAddress(addressRequestDto).getDistrict())
+					&& address.getWard().equals(addressMapper.requestToAddress(addressRequestDto).getWard()))
+				throw new ResourceFoundException("Address already in use");
+
+		}
+		Address address = addressMapper.requestToAddress(addressRequestDto);
+		addressRepository.save(address);
+		return createAddressCreate(address);
+	}
+
+	private Map<String, Object> createAddressUpdate(Address address) {
+		Map<String, Object> wrapper = new HashMap<>();
+		AddressResponseDto addressResponseDto = addressMapper.addressToResponse(address);
+		wrapper.put("data", addressResponseDto);
+		return wrapper;
+	}
+
+	@Override
+	public Map<String, Object> addressUpdate(AddressRequestDto addressRequestDto) throws ResourceFoundException {
+		Optional<Address> addressOptional = addressRepository.findById(addressRequestDto.getId());
+		if (addressOptional.isEmpty()) {
+			throw new ResourceFoundException("Address not found");
+		}
+		Integer statusOptional = addressOptional.get().getStatus();
+		if (statusOptional.equals(0)) {
+			throw new ResourceFoundException("Address not found");
+		}
+		Address address = addressMapper.requestToAddress(addressRequestDto);
+		address.setStatus(statusOptional);
+		address.setUserId(addressOptional.get().getUserId());
+		addressRepository.save(address);
+		return createAddressUpdate(address);
+	}
+
+	private Map<String, Object> createAddressDelete(Address address) {
+		Map<String, Object> wrapper = new HashMap<>();
+		AddressResponseDto addressResponseDto = addressMapper.addressToResponse(address);
+		wrapper.put("data", addressResponseDto);
+		return wrapper;
+	}
+
+	@Override
+	public Map<String, Object> addressDelete(AddressRequestDto addressRequestDto) throws ResourceFoundException {
+		Optional<Address> addressOptional = addressRepository.findById(addressRequestDto.getId());
+		if (addressOptional.isEmpty()) {
+			throw new ResourceFoundException("Address not found");
+		}
+		Integer statusOptional = addressOptional.get().getStatus();
+		if (statusOptional.equals(0)) {
+			throw new ResourceFoundException("Address not found");
+		}
+		Address address = addressOptional.get();
+		address.setStatus(0);
+		addressRepository.save(address);
+		return createAddressDelete(address);
+	}
 }

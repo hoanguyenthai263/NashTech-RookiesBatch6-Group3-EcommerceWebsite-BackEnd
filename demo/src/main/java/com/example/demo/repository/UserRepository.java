@@ -14,9 +14,9 @@ import com.example.demo.entity.User;
 public interface UserRepository extends JpaRepository<User, UUID> {
 	List<User> findByRoleId(Role roleId);
 
+	Optional<User> findById(UUID id);
+	
 	Optional<User> findByEmail(String email);
 
 	Optional<User> findByPhone(String phone);
-
-	Optional<User> findById(UUID id);
 }
