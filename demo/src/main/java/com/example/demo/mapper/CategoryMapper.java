@@ -9,7 +9,8 @@ import com.example.demo.entity.Category;
 @Component
 public class CategoryMapper {
 	public Category requestToCategory(CategoryRequestDto categoryRequestDto) {
-		return Category.builder().id(categoryRequestDto.getId()).build();
+		return Category.builder().id(categoryRequestDto.getId()).category(categoryRequestDto.getCategory())
+				.categoryParent(categoryRequestDto.getCategoryParent()).build();
 	}
 
 	public CategoryResponseDto categoryToResponse(Category category) {

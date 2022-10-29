@@ -16,6 +16,4 @@ public interface CategoryService {
 	public Map<String, Object> categoryCreate(CategoryRequestDto categoryRequestDto) throws ResourceFoundException;
 
 	public Map<String, Object> categoryUpdate(CategoryRequestDto categoryRequestDto) throws ResourceFoundException;
-
-	public Map<String, Object> categoryDelete(CategoryRequestDto categoryRequestDto) throws ResourceFoundException;
 }

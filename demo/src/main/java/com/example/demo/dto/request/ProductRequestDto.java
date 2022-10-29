@@ -11,10 +11,12 @@ import lombok.NoArgsConstructor;
 
 @Builder
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class CategoryRequestDto {
+@NoArgsConstructor
+public class ProductRequestDto {
 	private UUID id;
-	private String category;
-	private Category categoryParent;
+	private String product;
+	private Long price;
+	private String description;
+	private Category category;
 }

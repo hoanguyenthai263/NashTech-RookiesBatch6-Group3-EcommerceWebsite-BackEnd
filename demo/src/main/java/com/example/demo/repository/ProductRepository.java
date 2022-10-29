@@ -8,12 +8,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.Category;
+import com.example.demo.entity.Product;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category, UUID> {
-	  Optional<Category> findById(UUID id);
-	  
-	  List<Category> findByCategoryParent(Category categoryParent);
-	  
-	  Optional<Category> findByCategory(String category);
+public interface ProductRepository extends JpaRepository<Product, UUID> {
+	List<Product> findByCategory(Category category);
+
+	Optional<Product> findById(UUID id);
+
+	Optional<Product> findByProduct(String product);
 }
