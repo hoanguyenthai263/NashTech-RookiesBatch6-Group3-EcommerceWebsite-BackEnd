@@ -1,12 +1,19 @@
 package com.example.demo.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.request.UserRequestDto;
@@ -14,6 +21,10 @@ import com.example.demo.dto.response.UserResponseDto;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.exception.ResourceFoundException;
+import com.example.demo.jwt.JwtRequestDto;
+import com.example.demo.jwt.JwtResponseDto;
+import com.example.demo.jwt.JwtTokenProvider;
+import com.example.demo.jwt.JwtUserDetail;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
@@ -24,12 +35,37 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final RoleRepository roleRepository;
 	private final UserMapper userMapper;
+	private final PasswordEncoder passwordEncoder;
+	AuthenticationManager authenticationManager;
+	JwtTokenProvider jwtTokenProvider;
 
 	@Autowired
-	public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper) {
+	public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper,
+			PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager,
+			JwtTokenProvider jwtTokenProvider) {
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
 		this.userMapper = userMapper;
+		this.passwordEncoder = passwordEncoder;
+		this.authenticationManager = authenticationManager;
+		this.jwtTokenProvider = jwtTokenProvider;
+	}
+
+	private Map<String, Object> createUserAuthenticate(String jwt, Collection<? extends GrantedAuthority> role) {
+		Map<String, Object> wrapper = new HashMap<>();
+		JwtResponseDto jwtResponseDto = new JwtResponseDto(jwt, role);
+		wrapper.put("data", jwtResponseDto);
+		return wrapper;
+	}
+
+	@Override
+	public Map<String, Object> userAuthenticate(JwtRequestDto jwtRequestDto) throws ResourceFoundException {
+		Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(jwtRequestDto.getEmail(), jwtRequestDto.getPassWord()));
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		JwtUserDetail jwtUserDetail = (JwtUserDetail) authentication.getPrincipal();
+		String jwt = jwtTokenProvider.generateToken(jwtUserDetail);
+		return createUserAuthenticate(jwt, jwtUserDetail.getRole());
 	}
 
 	private Map<String, Object> createUsersListWithRole(List<User> list) {
@@ -96,6 +132,7 @@ public class UserServiceImpl implements UserService {
 			throw new ResourceFoundException("Role not found");
 		}
 		user.setRoleId(roleOptional.get());
+		user.setPassWord(passwordEncoder.encode(user.getPassWord()));
 		userRepository.save(user);
 		return createUserRegister(user);
 	}
@@ -120,6 +157,7 @@ public class UserServiceImpl implements UserService {
 		User user = userMapper.requestToUser(userRequestDto);
 		user.setStatus(statusOptional);
 		user.setRoleId(userOptional.get().getRoleId());
+		user.setPassWord(passwordEncoder.encode(user.getPassWord()));
 		userRepository.save(user);
 		return createUserUpdate(user);
 	}

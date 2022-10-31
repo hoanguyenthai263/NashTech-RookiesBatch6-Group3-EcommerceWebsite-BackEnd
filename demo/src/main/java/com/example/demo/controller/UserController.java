@@ -18,6 +18,7 @@ import com.example.demo.dto.response.RoleResponseDto;
 import com.example.demo.dto.response.UserResponseDto;
 import com.example.demo.entity.Role;
 import com.example.demo.exception.ResourceFoundException;
+import com.example.demo.jwt.JwtRequestDto;
 import com.example.demo.mapper.RoleMapper;
 import com.example.demo.service.RoleService;
 import com.example.demo.service.UserService;
@@ -34,6 +35,11 @@ public class UserController {
 		this.userService = userService;
 		this.roleService = roleService;
 		this.rolemapper = rolemapper;
+	}
+
+	@PostMapping("/login")
+	public Map<String, Object> login(@Valid @RequestBody JwtRequestDto jwtRequestDto) throws ResourceFoundException {
+		return userService.userAuthenticate(jwtRequestDto);
 	}
 
 	@GetMapping("/role")
